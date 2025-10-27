@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kelompok 12 PjBL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Oswald:wght@200..700&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            touch-action: pan-x pan-y;
+            overflow: hidden;
+        }
+        .background {
+            background-image: url('img/background-copy.png');
+        }
+        .mobile-only {
+            display: none;
+        }
+        .item {
+            touch-action: none;
+            user-select: none;
+        }
+        @media (max-width: 540px) {
+            .mobile-only {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body class="font-['Poppins'] mobile-only relative">
+    <div id="loading" class="fixed inset-0 bg-opacity-100 flex items-center justify-center z-[10000]">
+        <div class="text-2xl font-bold">Memuat...</div>
+    </div>
+
+    <div class="background bg-no-repeat bg-center bg-fixed h-screen [background-size:100%_100%]">
+        <div id="start" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden backdrop-blur-sm z-[9999]">
+            <div class="bg-white p-8 rounded-2xl shadow-lg max-w-sm text-center w-[85%]">
+                <h2 class="text-2xl font-bold mb-2">Selamat Datang Di Gim Kebersihan Kantin!</h2>
+                <p class="text-gray-600 mb-4">Sentuh dan seret item ke tempat yang tepat untuk menjaga kebersihan kantin.</p>
+                <button id="closeModal" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Mulai Gim
+                </button>
+            </div>
+        </div>
+
+        <div id="main">
+            <div class="flex justify-between items-center bg-gray-100 rounded-lg p-4 w-[74px] fixed top-2 left-2 z-40">
+                <div class="flex-col">
+                    <p class="text-gray-600">Skor:</p>
+                    <p class="text-2xl font-bold"><span id="score">0</span>/6</p>
+                </div>
+            </div>
+
+            <div class="absolute bottom-[23%] right-0 w-screen">
+                <div class="relative h-[250px]">
+                    <img class="w-full h-full absolute top-8 right-0 z-20" src="img/meja-pedagang.png" alt="meja-pedagang">
+                    <img class="h-full absolute top-[58%] right-0 z-30" src="img/meja-makan.png" alt="meja-makan">
+                    <img class="w-24 absolute top-[67%] right-14 z-30" src="img/piring-makan.png" alt="piring-makan" data-type="piring-makan">
+                    <img class="w-[60px] absolute top-[60%] right-5 z-30 -rotate-[75deg]" src="img/botol-plastik.png" alt="botol-plastik" data-type="botol-plastik">
+                    <img class="w-16 absolute top-[60%] right-[88px] z-30 rotate-[25deg]" src="img/sendok-makan.png" alt="sendok-makan" data-type="sendok-makan">
+                    <img class="w-14 absolute top-[65%] right-[72px] z-30 rotate-[45deg]" src="img/rokok-bekas.png" alt="rokok-bekas" data-type="rokok-bekas">
+                    <img class="w-10 absolute top-[60%] right-40 z-30" src="img/kecap-saos.png" alt="kecap-saos" data-type="kecap-saos">
+                    <img class="w-16 absolute top-[65%] right-[120px] z-30 rotate-[-20deg]" src="img/kulit-pisang.png" alt="kulit-pisang" data-type="kulit-pisang">
+                    <div id="dropzone1" class="border-4 border-dashed border-black rounded-xl absolute top-[-60%] left-[15%] w-fit">
+                        <img class="w-60" src="img/pedagang.png" alt="pedagang">
+                    </div>
+                </div>
+            </div>
+
+            <div id="dropzone2" class="border-4 border-dashed border-black rounded-xl absolute bottom-[15%] left-[15%] translate-x-[-80%] p-3 w-fit z-30">
+                <img class="w-44" src="img/tempat-sampah.png" alt="tempat-sampah">
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 fixed bottom-0 w-full z-40">
+                <div class="lg:col-span-3">
+                    <div class="bg-gray-50 border border-gray-200 rounded-t-[3rem] p-6">
+                        <div id="items-container" class="flex gap-4 h-fit overflow-x-auto min-h-[8px]">
+                            <div class="item text-4xl text-center flex flex-col items-center justify-center flex-shrink-0">
+                                <img class="w-20 aspect-square" src="img/piring-makan.png" alt="piring-makan">
+                                <div class="text-base bg-slate-500 text-white rounded-md px-2 mt-2 text-center">Piring Makan</div>
+                            </div>
+                            <div class="item text-4xl text-center flex flex-col items-center justify-center flex-shrink-0">
+                                <img class="w-20 aspect-square" src="img/botol-plastik.png" alt="botol-plastik">
+                                <div class="text-base bg-slate-500 text-white rounded-md px-2 mt-2 text-center">Botol Plastik</div>
+                            </div>
+                            <div class="item text-4xl text-center flex flex-col items-center justify-center flex-shrink-0">
+                                <img class="w-20 aspect-square" src="img/sendok-makan.png" alt="sendok-makan">
+                                <div class="text-base bg-slate-500 text-white rounded-md px-2 mt-2 text-center">Sendok Makan</div>
+                            </div>
+                            <div class="item text-4xl text-center flex flex-col items-center justify-center flex-shrink-0">
+                                <img class="w-20 aspect-square" src="img/rokok-bekas.png" alt="rokok-bekas">
+                                <div class="text-base bg-slate-500 text-white rounded-md px-2 mt-2 text-center">Rokok Bekas</div>
+                            </div>
+                            <div class="item text-4xl text-center flex flex-col items-center justify-center flex-shrink-0">
+                                <img class="w-20 aspect-square" src="img/kecap-saos.png" alt="kecap-saos">
+                                <div class="text-base bg-slate-500 text-white rounded-md px-2 mt-2 text-center">Kecap Saos</div>
+                            </div>
+                            <div class="item text-4xl text-center flex flex-col items-center justify-center flex-shrink-0">
+                                <img class="w-20 aspect-square" src="img/kulit-pisang.png" alt="kulit-pisang">
+                                <div class="text-base bg-slate-500 text-white rounded-md px-2 mt-2 text-center">Kulit Pisang</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="end" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden backdrop-blur-sm z-[9999]">
+            <div class="bg-white p-8 rounded-2xl shadow-lg max-w-sm text-center w-[85%]">
+                <h2 class="text-2xl font-bold mb-2">Terima Kasih Telah Memainkan Gim Kami!</h2>
+                <p class="text-gray-600 mb-4">Mari jadikan budaya self service sebagai bagian dari keseharian kita di kantin. Tidak perlu menunggu orang lain untuk membereskan, cukup lakukan dari diri sendiri. Dengan begitu, kita ikut menjaga kebersihan, kenyamanan, dan kebersamaan di lingkungan kantin kampus.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        window.addEventListener('load', () => {
+            const allImages = document.querySelectorAll('img');
+            let loadedCount = 0;
+
+            allImages.forEach(img => {
+                if (img.complete) {
+                    loadedCount++;
+                } else {
+                    img.addEventListener('load', () => {
+                        loadedCount++;
+                        checkAllLoaded();
+                    });
+                    img.addEventListener('error', () => {
+                        loadedCount++;
+                        checkAllLoaded();
+                    });
+                }
+            });
+
+            function checkAllLoaded() {
+                if (loadedCount === allImages.length) {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('start').classList.remove('hidden');
+                }
+            }
+            checkAllLoaded();
+
+            document.getElementById('closeModal').addEventListener('click', () => {
+                document.getElementById('start').classList.add('hidden');
+            });
+        });
+
+        function showAlert(type) {
+            const alertContainer = document.body;
+            const alertBox = document.createElement('div');
+
+            alertBox.className = 'fixed top-5 right-[-300px] flex flex-col gap-2 bg-gray-100 rounded-xl p-4 max-w-[200px] shadow-lg transition-all duration-500 ease-in-out z-50';
+            
+            const existingAlerts = document.querySelectorAll('.alert-instance');
+            const offset = existingAlerts.length * 80;
+
+            alertBox.style.top = `${20 + offset}px`;
+            alertBox.classList.add('alert-instance');
+
+            const icon = document.createElement('p');
+            icon.className = 'text-3xl font-bold';
+
+            const text = document.createElement('p');
+            text.className = 'text-base text-gray-600 ml-2';
+
+            if (type === 'benar') {
+                icon.textContent = '😁';
+                text.textContent = 'Bagus! Kamu sudah menaruh di tempat yang benar.';
+            } else {
+                icon.textContent = '😔';
+                text.textContent = 'Yahhhh! Coba ingat kembali aturan self service.';
+            }
+
+            alertBox.appendChild(icon);
+            alertBox.appendChild(text);
+            alertContainer.appendChild(alertBox);
+
+            setTimeout(() => {
+                alertBox.style.right = '20px';
+            }, 50);
+
+            setTimeout(() => {
+                alertBox.style.right = '-300px';
+            }, 3050);
+
+            setTimeout(() => {
+                alertBox.remove();
+                const remainingAlerts = document.querySelectorAll('.alert-instance');
+
+                remainingAlerts.forEach((a, i) => {
+                    a.style.top = `${20 + i * 80}px`;
+                });
+            }, 3550);
+        }
+
+        const items = document.querySelectorAll('.item');
+        const dropzone1 = document.getElementById('dropzone1');
+        const dropzone2 = document.getElementById('dropzone2');
+
+        items.forEach(item => {
+            let offsetX = 0, offsetY = 0;
+            let startX = 0, startY = 0;
+            let originalParent = null;
+
+            item.addEventListener('touchstart', e => {
+                const touch = e.touches[0];
+                const rect = item.getBoundingClientRect();
+
+                originalParent = document.getElementById('items-container');
+                startX = rect.left;
+                startY = rect.top;
+
+                document.body.appendChild(item);
+                item.style.transition = 'none';
+                item.style.position = 'absolute';
+                item.style.zIndex = 999;
+
+                const itemCenterX = rect.width / 2;
+                const itemCenterY = rect.height / 2;
+
+                const x = touch.clientX - itemCenterX;
+                const y = touch.clientY - itemCenterY;
+
+                item.style.left = `${x}px`;
+                item.style.top = `${y}px`;
+
+                offsetX = itemCenterX;
+                offsetY = itemCenterY;
+            });
+
+            item.addEventListener('touchmove', e => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const x = touch.clientX - offsetX;
+                const y = touch.clientY - offsetY;
+
+                item.style.left = `${x}px`;
+                item.style.top = `${y}px`;
+            });
+
+            item.addEventListener('touchend', e => {
+                const touch = e.changedTouches[0];
+                const x = touch.clientX;
+                const y = touch.clientY;
+
+                const dropzones = [dropzone1, dropzone2];
+                let dropped = false;
+                let correctDrop = false;
+
+                for (const zone of dropzones) {
+                    const rect = zone.getBoundingClientRect();
+                    if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                        dropped = true;
+
+                        const scoreElement = document.getElementById('score');
+                        let currentScore = parseInt(scoreElement.textContent);
+                        const type = item.querySelector('img')?.alt;
+
+                        if (
+                            (zone === dropzone1 && (type === 'piring-makan' || type === 'sendok-makan' || type === 'kecap-saos')) ||
+                            (zone === dropzone2 && (type === 'rokok-bekas' || type === 'botol-plastik' || type === 'kulit-pisang'))
+                        ) {
+                            correctDrop = true;
+                            currentScore += 1;
+                            scoreElement.textContent = currentScore;
+
+                            const tableItem = document.querySelector(`img[data-type="${type}"]`);
+                            if (tableItem) tableItem.remove();
+
+                            showAlert('benar');
+
+                            item.style.transition = 'opacity 0.3s ease';
+                            item.style.opacity = '0';
+                            setTimeout(() => {
+                                item.remove();
+                                const remainingItems = document.querySelectorAll('#items-container .item');
+                                if (remainingItems.length === 0) {
+                                    document.getElementById('end').classList.remove('hidden');
+                                }
+                            }, 300);
+                        } else {
+                            showAlert('salah');
+                        }
+                        break;
+                    }
+                }
+
+                if (!correctDrop) {
+                    item.style.transition = 'all 0.3s ease';
+                    item.style.left = `${startX}px`;
+                    item.style.top = `${startY}px`;
+
+                    setTimeout(() => {
+                        item.style.position = '';
+                        item.style.left = '';
+                        item.style.top = '';
+                        item.style.zIndex = '';
+                        item.style.opacity = '1';
+                        originalParent.appendChild(item);
+                    }, 300);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
